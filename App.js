@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
-import { NativeRouter, Route, Link } from 'react-router-native'
+import { NativeRouter, BackButton, Route } from 'react-router-native'
 import * as Font from 'expo-font'
 import AppLoading from 'expo-app-loading'
 import { StatusBar } from 'expo-status-bar'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import Scan from './src/components/pages/Scan'
 import Proofs from './src/components/pages/Proofs'
@@ -29,19 +30,22 @@ export default () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style='light' />
-      <NativeRouter>
-        <Route exact path='/' component={Proofs} />
-      </NativeRouter>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <StatusBar style='light' />
+        <NativeRouter>
+          <BackButton>
+            {/* <Route exact path='/' component={Proofs} /> */}
+            <Route exact path='/' component={Scan} />
+          </BackButton>
+        </NativeRouter>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'black',
   },
 })
