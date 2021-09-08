@@ -1,12 +1,19 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default () => (
-  <View style={styles.container}>
-    <Text style={styles.scan}>Scan the QR code on your vaccination proof.</Text>
-  </View>
-)
+import Button from '../atoms/Button'
 
+export default () => {
+  const onPress = () => {}
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.scan}>
+        <Button title='start' onPress={onPress} />
+      </Text>
+    </View>
+  )
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
