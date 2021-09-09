@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, Text, View, Alert } from 'react-native'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-native'
 
 import { Camera } from 'expo-camera'
-import { Icon } from 'react-native-elements'
+import { Icon, BottomSheet } from 'react-native-elements'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import QRCode from 'react-native-qrcode-svg'
 import RBSheet from 'react-native-raw-bottom-sheet'
+import uuid from 'react-native-uuid'
 
 import parseShc from '../../utils/parseShc'
 import Button from '../atoms/Button'
+import { addProof, getId, getBirthday, getFullName } from '../../redux/proofs'
 
 export default () => {
   const [hasPermission, setHasPermission] = useState(null)
@@ -19,10 +23,18 @@ export default () => {
 
   const [proof, setProof] = useState('')
 
+  const dispatch = useDispatch()
+
+  const history = useHistory()
+
   useEffect(() => {
     ;(async () => {
       const { status } = await Camera.requestPermissionsAsync()
       setHasPermission(status === 'granted')
+
+      if (status !== 'granted') {
+        history.goBack()
+      }
     })()
   }, [])
 
@@ -39,9 +51,18 @@ export default () => {
     }
     barCodeScanned.current = data
     const parsedData = parseShc(data)
-    setProof({ raw: data, ...parsedData })
+    setProof({ raw: data, ...parsedData, id: uuid.v4() })
     bottomPanel.current.open()
-    // Alert.alert('Scanned', JSON.stringify(payload), [
+  }
+
+  const onBottomPanelClose = () => {
+    barCodeScanned.current = ''
+    setProof('')
+  }
+
+  const onSaveProof = () => {
+    dispatch(addProof(proof))
+    // Alert.alert('Scanned', 'foo', [
     //   {
     //     text: 'Cancel',
     //     onPress: () => console.log('Cancel Pressed'),
@@ -49,11 +70,7 @@ export default () => {
     //   },
     //   { text: 'OK', onPress: () => console.log('OK Pressed') },
     // ])
-  }
-
-  const onBottomPanelClose = () => {
-    barCodeScanned.current = ''
-    setProof('')
+    history.goBack()
   }
 
   return (
@@ -88,7 +105,7 @@ export default () => {
       <RBSheet
         ref={bottomPanel}
         height={300}
-        openDuration={250}
+        openDuration={1000}
         onClose={onBottomPanelClose}
         customStyles={{ container: styles.bottomPanel }}
       >
@@ -96,9 +113,10 @@ export default () => {
           <Text style={styles.bottomPanelTitle}>
             Vaccination proof detected
           </Text>
-          <Text style={styles.bottomPanelName}>Thibault Friedrich</Text>
+          <Text style={styles.bottomPanelName}>{getFullName(proof)}</Text>
+          <Text style={styles.bottomPanelBirthday}>{getBirthday(proof)}</Text>
         </View>
-        <Button title='Save' />
+        <Button title='Save' onPress={onSaveProof} />
       </RBSheet>
     </View>
   )
@@ -156,5 +174,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Jost-Medium',
     paddingTop: 20,
+  },
+  bottomPanelBirthday: {
+    fontSize: 20,
+    color: '#94a1b2',
+    textAlign: 'center',
+    fontFamily: 'Jost-Medium',
+    paddingTop: 10,
   },
 })

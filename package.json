@@ -8,6 +8,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.7",
+    "@reduxjs/toolkit": "^1.6.1",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
     "expo": "~42.0.1",
@@ -25,9 +27,13 @@
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-svg": "^12.1.1",
+    "react-native-uuid": "^2.0.1",
     "react-native-web": "~0.13.12",
+    "react-redux": "^7.2.5",
     "react-router-native": "^5.2.1",
-    "react-zlib-js": "^1.0.5"
+    "react-zlib-js": "^1.0.5",
+    "redux": "^4.1.1",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

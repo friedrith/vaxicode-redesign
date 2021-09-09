@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import {
   StyleSheet,
   Text,
@@ -6,72 +7,88 @@ import {
   Alert,
   TouchableHighlight,
   FlatList,
+  AppState,
 } from 'react-native'
 import { Icon } from 'react-native-elements'
-import { Link } from 'react-router-native'
+import { Link, useHistory } from 'react-router-native'
 
 import * as Brightness from 'expo-brightness'
 import { Header } from 'react-native-elements'
 
 import Button from '../atoms/Button'
 import Proof from '../molecules/Proof'
-
-const proofs = [
-  {
-    name: 'Thibault Friedrich',
-  },
-  {
-    name: 'Paria Majidi',
-  },
-]
+import { getProofs, getId } from '../../redux/proofs'
 
 export default () => {
-  const status = useRef('foo')
+  const permission = useRef('')
+
+  const activeIndex = useRef(0)
+
+  const appState = useRef(AppState.currentState)
+
+  const proofs = useSelector(getProofs)
+
+  const history = useHistory()
+
+  const onAwake = nextAppState => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active' &&
+      permission.current === 'granted' &&
+      proofs.length > 0
+    ) {
+      Brightness.setSystemBrightnessAsync(1)
+    }
+
+    appState.current = nextAppState
+  }
 
   useEffect(() => {
     ;(async () => {
-      status.current = (await Brightness.requestPermissionsAsync()).status
-    })()
-  }, [])
+      permission.current = (await Brightness.requestPermissionsAsync()).status
 
-  const onPress = () => {
-    if (status.current === 'granted') {
-      Brightness.setSystemBrightnessAsync(1)
-    } else {
-      Alert.alert('Alert Title', status.current, [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
-      ])
+      if (permission.current === 'granted' && proofs.length > 0) {
+        Brightness.setSystemBrightnessAsync(1)
+      }
+    })()
+
+    AppState.addEventListener('change', onAwake)
+
+    return () => {
+      AppState.removeEventListener('change', onAwake)
     }
-  }
+  }, [])
 
   return (
     <View style={styles.container}>
-      <Header placement='right' containerStyle={styles.header}>
+      <Header
+        placement='right'
+        containerStyle={styles.header}
+        backgroundColor='#16161a'
+      >
+        <TouchableHighlight>
+          <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
+        </TouchableHighlight>
+        <></>
         <Link to='/scan'>
           <Icon name='add-outline' size={30} type='ionicon' color='#fff' />
         </Link>
-
-        <></>
-        <TouchableHighlight>
-          <Icon
-            name='ellipsis-vertical-outline'
-            size={30}
-            type='ionicon'
-            color='#fff'
-          />
-        </TouchableHighlight>
       </Header>
       <View style={styles.list}>
-        <FlatList
-          data={proofs}
-          renderItem={({ item }) => <Proof name={item.name} />}
-          keyExtractor={item => item.name}
-        />
+        {proofs.length > 0 ? (
+          <FlatList
+            data={proofs}
+            renderItem={({ item, index }) => (
+              <Proof proof={item} expanded={index === activeIndex.current} />
+            )}
+          />
+        ) : (
+          <View style={styles.content}>
+            <Link to='/scan'>
+              <Button title='Add proof' onPress={() => history.push('/scan')} />
+            </Link>
+          </View>
+        )}
       </View>
     </View>
   )
@@ -83,10 +100,18 @@ const styles = StyleSheet.create({
   },
   header: {
     borderBottomColor: 'transparent',
-    backgroundColor: 'transparent',
+    backgroundColor: '#16161a',
   },
   list: {
     paddingTop: 15,
     flex: 1,
+  },
+  content: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: 15,
   },
 })
