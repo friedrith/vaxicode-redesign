@@ -5,13 +5,15 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.7",
     "@reduxjs/toolkit": "^1.6.1",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
+    "cbor-js": "^0.1.0",
     "expo": "~42.0.1",
     "expo-app-loading": "^1.1.2",
     "expo-barcode-scanner": "^10.2.2",
@@ -19,10 +21,14 @@
     "expo-camera": "~11.2.2",
     "expo-font": "~9.2.1",
     "expo-status-bar": "~1.0.4",
+    "jest": "^27.1.1",
+    "jest-react-native": "^18.0.0",
+    "pako": "^2.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-elements": "^3.4.2",
+    "react-native-gesture-handler": "^1.10.3",
     "react-native-qrcode-svg": "^6.1.1",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-safe-area-context": "3.2.0",
@@ -37,6 +43,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
   },
   "private": true
 }

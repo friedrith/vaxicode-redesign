@@ -12,21 +12,29 @@ import { useDispatch } from 'react-redux'
 import { Icon } from 'react-native-elements'
 import QRCode from 'react-native-qrcode-svg'
 import RBSheet from 'react-native-raw-bottom-sheet'
+import {
+  PinchGestureHandler,
+  TapGestureHandler,
+  State,
+} from 'react-native-gesture-handler'
 
 import Button from '../atoms/Button'
 import Immunization from '../molecules/Immunization'
-import {
-  getFullName,
-  getId,
-  removeProof,
-  getListOfImmunizations,
-  getBirthday,
-} from '../../redux/proofs'
+import { removeProof, isParsed } from '../../redux/proofs'
+
+const getWidth = (width, minWidth, isZoomed) => {}
 
 export default ({ proof, expanded = false }) => {
   const [isExpanded, expand] = useState(expanded)
 
   const [height, setHeight] = useState(new Animated.Value(expanded ? 0.5 : 0))
+
+  const [containerWidth, setContainerWidth] = useState(300)
+  const [isZoomed, setZoom] = useState(false)
+
+  const coeff = isZoomed ? 1 : 0.7
+
+  const qrCodeWidth = Math.max(coeff * containerWidth, 150)
 
   const [isFullExpanded, setFullExpand] = useState(false)
   const bottomPanel = useRef()
@@ -69,16 +77,33 @@ export default ({ proof, expanded = false }) => {
 
   const interpolateHeight = height.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: [0, 400, 1000],
+    outputRange: [0, 400, 800],
   })
 
-  const immunizations = getListOfImmunizations(proof)
+  const changeContainerWidth = event => {
+    const { x, y, width, height } = event.nativeEvent.layout
+    setContainerWidth(width)
+  }
+
+  const zoom = () => {
+    // setZoomed(!isZoomed)
+  }
+
+  const onPinchGestureEvent = event => {
+    setZoom(event.nativeEvent.scale > 1)
+  }
+
+  const onDoubleTapGestureEvent = event => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      setZoom(!isZoomed)
+    }
+  }
 
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={toggle}>
         <View style={styles.header}>
-          <Text style={styles.title}>{getFullName(proof)}</Text>
+          <Text style={styles.title}>{proof.name}</Text>
           <Animated.View
             style={[
               styles.animation,
@@ -97,28 +122,56 @@ export default ({ proof, expanded = false }) => {
       </TouchableOpacity>
       <Animated.View style={[styles.content, { height: interpolateHeight }]}>
         <View style={styles.innerContent}>
-          <View style={styles.qrCodeContainer}>
-            <QRCode value={proof.raw} size={300} logoSize={300} />
+          <View style={styles.qrCodeContainer} onLayout={changeContainerWidth}>
+            <TapGestureHandler
+              numberOfTaps={2}
+              onHandlerStateChange={onDoubleTapGestureEvent}
+            >
+              <PinchGestureHandler onHandlerStateChange={onPinchGestureEvent}>
+                <View>
+                  <QRCode
+                    value={proof.raw}
+                    size={qrCodeWidth}
+                    logoSize={qrCodeWidth}
+                    logoMargin={0}
+                  />
+                </View>
+              </PinchGestureHandler>
+            </TapGestureHandler>
           </View>
-          <View style={styles.qrCodeContainer}></View>
           <View style={styles.button}>
             {isFullExpanded ? (
               <View>
-                <Text style={styles.dateBirthday}>{getBirthday(proof)}</Text>
-                <Text style={styles.immunizationsTitle}>Protection</Text>
-                <View style={styles.protection}>
-                  <Text style={styles.protectionTitle}>Fully protected</Text>
-                  <Text style={styles.protectionDescription}>
-                    {immunizations.length >= 2 ? 'two doses of vaccin' : ''}
-                  </Text>
-                </View>
-                <Text style={styles.immunizationsTitle}>Immunization</Text>
-                <FlatList
-                  data={immunizations}
-                  renderItem={({ item, index }) => (
-                    <Immunization immunization={item} />
-                  )}
-                />
+                {!proof.parsingFailed ? (
+                  <View>
+                    <Text style={styles.dateBirthday}>
+                      Birthday: {proof.birthDay}
+                    </Text>
+                    {/* <Text style={styles.immunizationsTitle}>Protection</Text>
+                    <View style={styles.protection}>
+                      <Text style={styles.protectionTitle}>
+                        Fully protected
+                      </Text>
+                      <Text style={styles.protectionDescription}>
+                        {immunizations.length >= 2 ? 'two doses of vaccin' : ''}
+                      </Text>
+                    </View> */}
+                    {proof.immunizations.length > 0 ? (
+                      <View>
+                        <Text style={styles.immunizationsTitle}>
+                          Immunization
+                        </Text>
+                        <FlatList
+                          data={proof.immunizations}
+                          renderItem={({ item, index }) => (
+                            <Immunization immunization={item} />
+                          )}
+                        />
+                      </View>
+                    ) : null}
+                  </View>
+                ) : null}
+
                 <View style={styles.buttonDeleteContainer}>
                   <Button
                     onPress={onAskDeleteConfirmation}
@@ -136,7 +189,9 @@ export default ({ proof, expanded = false }) => {
                 </View>
               </View>
             ) : (
-              <Button title='Show details' small onPress={openFull} />
+              <View style={styles.showDetailsContainer}>
+                <Button title='Show details' small onPress={openFull} />
+              </View>
             )}
           </View>
         </View>
@@ -207,7 +262,7 @@ const styles = StyleSheet.create({
   },
   dateBirthday: {
     fontSize: 20,
-    color: '#fffffe',
+    color: '#72757e',
     textAlign: 'center',
     fontFamily: 'Jost-Medium',
   },
@@ -234,6 +289,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: {
+    paddingTop: 10,
+  },
+  showDetailsContainer: {
     paddingTop: 10,
   },
   bottomPanel: {

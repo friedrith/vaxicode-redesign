@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { store, persistor } from './src/redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import Scan from './src/components/pages/Scan'
 import Proofs from './src/components/pages/Proofs'
@@ -38,12 +39,14 @@ export default () => {
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <StatusBar style='light' />
-            <NativeRouter>
-              <BackButton>
-                <Route exact path='/' component={Proofs} />
-                <Route exact path='/scan' component={Scan} />
-              </BackButton>
-            </NativeRouter>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <NativeRouter>
+                <BackButton>
+                  <Route exact path='/' component={Proofs} />
+                  <Route exact path='/scan' component={Scan} />
+                </BackButton>
+              </NativeRouter>
+            </GestureHandlerRootView>
           </SafeAreaView>
         </SafeAreaProvider>
       </PersistGate>

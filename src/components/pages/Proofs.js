@@ -62,14 +62,14 @@ export default () => {
   return (
     <View style={styles.container}>
       <Header
-        placement='right'
+        placement='center'
         containerStyle={styles.header}
         backgroundColor='#16161a'
       >
         <TouchableHighlight>
           <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
         </TouchableHighlight>
-        <></>
+        <Text style={styles.title}>My Immunizations</Text>
         <Link to='/scan'>
           <Icon name='add-outline' size={30} type='ionicon' color='#fff' />
         </Link>
@@ -101,6 +101,18 @@ const styles = StyleSheet.create({
   header: {
     borderBottomColor: 'transparent',
     backgroundColor: '#16161a',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  title: {
+    color: '#fffffe',
+    textAlign: 'left',
+    fontFamily: 'Jost-Medium',
+    fontSize: 17,
+    textTransform: 'uppercase',
+    flex: 1,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   list: {
     paddingTop: 15,

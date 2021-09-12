@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, Text, View, Alert } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  TextInput,
+  Vibration,
+} from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-native'
 
@@ -8,16 +15,20 @@ import { Icon, BottomSheet } from 'react-native-elements'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import QRCode from 'react-native-qrcode-svg'
 import RBSheet from 'react-native-raw-bottom-sheet'
-import uuid from 'react-native-uuid'
 
-import parseShc from '../../utils/parseShc'
+import parserQrCode from '../../utils/parserQrCode'
 import Button from '../atoms/Button'
-import { addProof, getId, getBirthday, getFullName } from '../../redux/proofs'
+import { addProof } from '../../redux/proofs'
+
+const ONE_SECOND_IN_MS = 1000
 
 export default () => {
   const [hasPermission, setHasPermission] = useState(null)
   const [type, setType] = useState(Camera.Constants.Type.back)
   const barCodeScanned = useRef('')
+  const camera = useRef()
+
+  const [cameraWidth, setCameraWidth] = useState(300)
 
   const bottomPanel = useRef()
 
@@ -49,28 +60,36 @@ export default () => {
     if (data === barCodeScanned.current) {
       return ''
     }
+
+    Vibration.vibrate()
+
+    camera.current.pausePreview()
     barCodeScanned.current = data
-    const parsedData = parseShc(data)
-    setProof({ raw: data, ...parsedData, id: uuid.v4() })
+    setProof(parserQrCode(data))
     bottomPanel.current.open()
   }
 
   const onBottomPanelClose = () => {
     barCodeScanned.current = ''
     setProof('')
+    camera.current.resumePreview()
   }
 
   const onSaveProof = () => {
     dispatch(addProof(proof))
-    // Alert.alert('Scanned', 'foo', [
-    //   {
-    //     text: 'Cancel',
-    //     onPress: () => console.log('Cancel Pressed'),
-    //     style: 'cancel',
-    //   },
-    //   { text: 'OK', onPress: () => console.log('OK Pressed') },
-    // ])
     history.goBack()
+  }
+
+  const onChangeText = text => {
+    setProof({
+      ...proof,
+      payload: { name: text },
+    })
+  }
+
+  const changeCameraWidth = event => {
+    const { x, y, width, height } = event.nativeEvent.layout
+    setCameraWidth(width)
   }
 
   return (
@@ -79,19 +98,21 @@ export default () => {
         Scan the QR code on your vaccination proof.
       </Text>
 
-      <View style={styles.cameraContainer}>
-        {proof ? (
-          <QRCode value={proof.raw} size={300} logoSize={300} />
-        ) : (
-          <Camera
-            style={styles.camera}
-            type={type}
-            barCodeScannerSettings={{
-              barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-            }}
-            onBarCodeScanned={scanned}
-          >
-            {/* <Icon
+      <View style={styles.cameraContainer} onLayout={changeCameraWidth}>
+        <Camera
+          ref={camera}
+          style={{
+            ...styles.camera,
+            width: cameraWidth,
+            height: cameraWidth,
+          }}
+          type={type}
+          barCodeScannerSettings={{
+            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+          }}
+          onBarCodeScanned={scanned}
+        >
+          {/* <Icon
             name='qr-code-outline'
             style={styles.scanIcon}
             color='white'
@@ -99,8 +120,7 @@ export default () => {
             size={300}
             iconStyle={styles.scanIcon}
           /> */}
-          </Camera>
-        )}
+        </Camera>
       </View>
       <RBSheet
         ref={bottomPanel}
@@ -110,11 +130,31 @@ export default () => {
         customStyles={{ container: styles.bottomPanel }}
       >
         <View style={styles.bottomPanelContent}>
-          <Text style={styles.bottomPanelTitle}>
-            Vaccination proof detected
-          </Text>
-          <Text style={styles.bottomPanelName}>{getFullName(proof)}</Text>
-          <Text style={styles.bottomPanelBirthday}>{getBirthday(proof)}</Text>
+          {proof.parsingFailed ? (
+            <View>
+              <Text style={styles.bottomPanelFailed}>
+                The QR code is not a valid SHC QR code. But you can still save
+                it as another country vaccine passport.
+              </Text>
+              <TextInput
+                style={styles.input}
+                autofocus
+                placeholder='Name'
+                editable
+                maxLength={40}
+                placeholderTextColor='#94a1b2'
+                onChangeText={onChangeText}
+              />
+            </View>
+          ) : (
+            <View>
+              <Text style={styles.bottomPanelTitle}>
+                Vaccination proof detected
+              </Text>
+              <Text style={styles.bottomPanelName}>{proof.name}</Text>
+              <Text style={styles.bottomPanelBirthday}>{proof.birthDay}</Text>
+            </View>
+          )}
         </View>
         <Button title='Save' onPress={onSaveProof} />
       </RBSheet>
@@ -129,6 +169,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+  },
+  input: {
+    backgroundColor: '#242629',
+    color: '#fffffe',
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
   },
   scan: {
     fontSize: 23,
@@ -147,8 +194,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   camera: {
-    width: 300,
-    height: 300,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -164,7 +209,13 @@ const styles = StyleSheet.create({
   },
   bottomPanelTitle: {
     fontSize: 18,
-    color: '#94a1b2',
+    color: '#2cb67d',
+    textAlign: 'center',
+    fontFamily: 'Jost-Medium',
+  },
+  bottomPanelFailed: {
+    fontSize: 18,
+    color: '#fffffe',
     textAlign: 'center',
     fontFamily: 'Jost-Medium',
   },

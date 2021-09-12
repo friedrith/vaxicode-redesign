@@ -7,3 +7,15 @@ yarn
 yarn start
 
 ```
+
+## Technical details
+
+
+Qr code parsers inspired:
+
+- french: https://github.com/manekinekko/digital-covid-certificate-decoder/blob/main/index.js
+- canadian: https://github.com/obrassard/shc-extractorx
+
+## License 
+
+- [MIT](./  )
