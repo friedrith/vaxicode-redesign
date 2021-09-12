@@ -25,4 +25,4 @@ Our Qr code parsers are inspired from:
 
 ## License 
 
-- [MIT](./  )
+- [MIT](./LICENSE)
