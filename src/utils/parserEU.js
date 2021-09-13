@@ -50,13 +50,13 @@ export default raw => {
 
   const { fn, gn } = decoded['-260']['1'].nam
 
-  const birthday = decoded['-260']['1'].dob
+  const birthDay = decoded['-260']['1'].dob
 
   return {
     data: decoded,
     // name: 'foo',
     name: `${gn} ${fn}`,
-    birthday,
+    birthDay,
     immunizations: [],
   }
 }

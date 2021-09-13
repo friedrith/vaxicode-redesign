@@ -21,6 +21,7 @@ Our Qr code parsers are inspired from:
 
 - [React native official website](https://reactnative.dev/docs/components-and-apis)
 - [Expo components](https://docs.expo.dev/versions/latest/)
+- https://wix.github.io/react-native-navigation/docs/sideMenu/
 - [React native component library](https://reactnativeelements.com/docs/icon/)
 
 ## License 
