@@ -3,18 +3,16 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
   TextInput,
   Vibration,
   TouchableWithoutFeedback,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { Link, useHistory } from 'react-router-native'
+import { useHistory } from 'react-router-native'
 
 import { Camera } from 'expo-camera'
-import { Icon, BottomSheet } from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 import { BarCodeScanner } from 'expo-barcode-scanner'
-import QRCode from 'react-native-qrcode-svg'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import { Header } from 'react-native-elements'
 
@@ -22,11 +20,8 @@ import parserQrCode from '../../utils/parserQrCode'
 import Button from '../atoms/Button'
 import { addProof } from '../../redux/proofs'
 
-const ONE_SECOND_IN_MS = 1000
-
-export default () => {
+const Scan = () => {
   const [hasPermission, setHasPermission] = useState(null)
-  const [type, setType] = useState(Camera.Constants.Type.back)
   const barCodeScanned = useRef('')
   const camera = useRef()
 
@@ -90,7 +85,7 @@ export default () => {
   }
 
   const changeCameraWidth = event => {
-    const { x, y, width, height } = event.nativeEvent.layout
+    const { width } = event.nativeEvent.layout
     setCameraWidth(width)
   }
 
@@ -124,21 +119,12 @@ export default () => {
               width: cameraWidth,
               height: cameraWidth,
             }}
-            type={type}
+            type={Camera.Constants.Type.back}
             barCodeScannerSettings={{
               barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
             }}
             onBarCodeScanned={scanned}
-          >
-            {/* <Icon
-            name='qr-code-outline'
-            style={styles.scanIcon}
-            color='white'
-            type='ionicon'
-            size={300}
-            iconStyle={styles.scanIcon}
-          /> */}
-          </Camera>
+          ></Camera>
         </View>
         <RBSheet
           ref={bottomPanel}
@@ -263,3 +249,5 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 })
+
+export default Scan

@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['prettier', 'eslint:recommended'],
+  extends: ['prettier', 'eslint:recommended', 'plugin:react/recommended'],
   plugins: ['jest', 'react', 'react-native'],
   env: {
     'jest/globals': true,

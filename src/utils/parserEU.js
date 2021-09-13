@@ -1,4 +1,3 @@
-import { Buffer } from 'buffer'
 import { inflate } from 'pako'
 import cbor from 'cbor-js'
 import decode_ from './base45-decoder'
@@ -10,6 +9,7 @@ const typedArrayToBufferSliced = array =>
   array.buffer.slice(array.byteOffset, array.byteLength + array.byteOffset)
 
 const typedArrayToBuffer = array => {
+  // eslint-disable-next-line no-undef
   let buffer = new ArrayBuffer(array.length)
 
   array.map(function (value, i) {

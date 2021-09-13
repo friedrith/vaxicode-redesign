@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
   TouchableHighlight,
   FlatList,
   AppState,
@@ -17,9 +16,9 @@ import { Header } from 'react-native-elements'
 
 import Button from '../atoms/Button'
 import Proof from '../molecules/Proof'
-import { getProofs, getId } from '../../redux/proofs'
+import { getProofs } from '../../redux/proofs'
 
-export default () => {
+const Proofs = () => {
   const permission = useRef('')
 
   const activeIndex = useRef(0)
@@ -127,3 +126,5 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 })
+
+export default Proofs

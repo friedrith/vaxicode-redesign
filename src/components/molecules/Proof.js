@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   Animated,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { Icon } from 'react-native-elements'
 import QRCode from 'react-native-qrcode-svg'
@@ -20,14 +21,12 @@ import {
 
 import Button from '../atoms/Button'
 import Immunization from '../molecules/Immunization'
-import { removeProof, isParsed } from '../../redux/proofs'
+import { removeProof } from '../../redux/proofs'
 
-const getWidth = (width, minWidth, isZoomed) => {}
-
-export default ({ proof, expanded = false }) => {
+const Proof = ({ proof, expanded = false }) => {
   const [isExpanded, expand] = useState(expanded)
 
-  const [height, setHeight] = useState(new Animated.Value(expanded ? 0.5 : 0))
+  const [height] = useState(new Animated.Value(expanded ? 0.5 : 0))
 
   const [containerWidth, setContainerWidth] = useState(300)
   const [isZoomed, setZoom] = useState(false)
@@ -81,12 +80,8 @@ export default ({ proof, expanded = false }) => {
   })
 
   const changeContainerWidth = event => {
-    const { x, y, width, height } = event.nativeEvent.layout
+    const { width } = event.nativeEvent.layout
     setContainerWidth(width)
-  }
-
-  const zoom = () => {
-    // setZoomed(!isZoomed)
   }
 
   const onPinchGestureEvent = event => {
@@ -107,7 +102,6 @@ export default ({ proof, expanded = false }) => {
           <Animated.View
             style={[
               styles.animation,
-              // { opacity: fadeAnim },
               { transform: [{ rotate: interpolateRotating }] },
             ]}
           >
@@ -147,15 +141,6 @@ export default ({ proof, expanded = false }) => {
                     <Text style={styles.dateBirthday}>
                       Birthday: {proof.birthDay}
                     </Text>
-                    {/* <Text style={styles.immunizationsTitle}>Protection</Text>
-                    <View style={styles.protection}>
-                      <Text style={styles.protectionTitle}>
-                        Fully protected
-                      </Text>
-                      <Text style={styles.protectionDescription}>
-                        {immunizations.length >= 2 ? 'two doses of vaccin' : ''}
-                      </Text>
-                    </View> */}
                     {proof.immunizations.length > 0 ? (
                       <View>
                         <Text style={styles.immunizationsTitle}>
@@ -163,7 +148,7 @@ export default ({ proof, expanded = false }) => {
                         </Text>
                         <FlatList
                           data={proof.immunizations}
-                          renderItem={({ item, index }) => (
+                          renderItem={({ item }) => (
                             <Immunization immunization={item} />
                           )}
                         />
@@ -336,3 +321,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Medium',
   },
 })
+
+Proof.propTypes = {
+  proof: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    birthDay: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    parsingFailed: PropTypes.bool,
+    immunizations: PropTypes.arrayOf(PropTypes.shape({})),
+    raw: PropTypes.string.isRequired,
+  }).isRequired,
+  expanded: PropTypes.bool.isRequired,
+}
+
+export default Proof

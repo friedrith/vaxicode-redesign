@@ -1,7 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import PropTypes from 'prop-types'
 
-export default ({ title, onPress, small = false, style, basic, icon }) => (
+const Button = ({ title, onPress, small = false, style, basic, icon }) => (
   <TouchableOpacity
     style={{
       ...styles.button,
@@ -59,3 +60,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 })
+
+Button.propTypes = {
+  title: PropTypes.string.isRequired,
+  onPress: PropTypes.func.isRequired,
+  small: PropTypes.bool,
+  style: PropTypes.object,
+  basic: PropTypes.bool,
+  icon: PropTypes.element,
+}
+
+export default Button

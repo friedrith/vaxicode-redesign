@@ -1,7 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+import PropTypes from 'prop-types'
 
-export default ({ immunization }) => (
+const Immunizations = ({ immunization }) => (
   <View style={styles.container}>
     <View style={styles.doseNumber}>
       <Text style={styles.doseNumberLabel}>Dose</Text>
@@ -10,7 +11,6 @@ export default ({ immunization }) => (
     <View style={styles.content}>
       <Text style={styles.name}>{immunization.vaccinName}</Text>
       <Text style={styles.title}>{immunization.date}</Text>
-
       <Text style={styles.place}>{immunization.place}</Text>
       <Text style={styles.title}>Lot {immunization.lot}</Text>
     </View>
@@ -71,3 +71,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
+
+Immunizations.propTypes = {
+  immunization: PropTypes.shape({
+    doseNumber: PropTypes.number.isRequired,
+    vaccinName: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    place: PropTypes.string.isRequired,
+    lot: PropTypes.string.isRequired,
+  }).isRequired,
+}
+
+export default Immunizations

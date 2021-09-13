@@ -24,6 +24,7 @@
     "jest": "^27.1.1",
     "jest-react-native": "^18.0.0",
     "pako": "^2.0.4",
+    "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
