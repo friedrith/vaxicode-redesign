@@ -23,6 +23,7 @@ Our Qr code parsers are inspired from:
 - [Expo components](https://docs.expo.dev/versions/latest/)
 - https://wix.github.io/react-native-navigation/docs/sideMenu/
 - [React native component library](https://reactnativeelements.com/docs/icon/)
+- [Localization](https://docs.expo.dev/versions/v42.0.0/sdk/localization/)
 
 ## License 
 
