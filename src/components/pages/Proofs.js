@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Platform,
   TouchableHighlight,
   FlatList,
   AppState,
@@ -18,8 +19,13 @@ import Button from '../atoms/Button'
 import Proof from '../molecules/Proof'
 import { getProofs } from '../../redux/proofs'
 
+const MAX_BRIGHTNESS = 1
+
 const Proofs = () => {
   const permission = useRef('')
+  const isAvailable = useRef(false)
+  const previousBrightness = useRef(0)
+  const previousBrightnessMode = useRef(Brightness.BrightnessMode.AUTOMATIC)
 
   const activeIndex = useRef(0)
 
@@ -29,32 +35,52 @@ const Proofs = () => {
 
   const history = useHistory()
 
-  const onAwake = nextAppState => {
+  const onAwakeOrSleep = async nextAppState => {
     if (
       appState.current.match(/inactive|background/) &&
       nextAppState === 'active' &&
+      isAvailable.current &&
       permission.current === 'granted' &&
       proofs.length > 0
     ) {
-      Brightness.setSystemBrightnessAsync(1)
+      Brightness.setSystemBrightnessAsync(MAX_BRIGHTNESS)
+    } else if (
+      appState.current === 'active' &&
+      nextAppState.match(/inactive|background/) &&
+      isAvailable.current
+    ) {
+      await Brightness.setSystemBrightnessAsync(previousBrightness.current)
+      if (Platform.OS === 'android') {
+        await Brightness.setSystemBrightnessModeAsync(
+          previousBrightnessMode.current
+        )
+      }
     }
 
     appState.current = nextAppState
   }
 
-  useEffect(() => {
-    ;(async () => {
-      permission.current = (await Brightness.requestPermissionsAsync()).status
+  const initializeBrightness = async () => {
+    permission.current = (await Brightness.requestPermissionsAsync()).status
+    isAvailable.current = await Brightness.isAvailableAsync()
+    if (isAvailable.current && permission.current === 'granted') {
+      previousBrightness.current = await Brightness.getSystemBrightnessAsync()
+      previousBrightnessMode.current =
+        await Brightness.getSystemBrightnessModeAsync()
 
-      if (permission.current === 'granted' && proofs.length > 0) {
-        Brightness.setSystemBrightnessAsync(1)
+      if (proofs.length > 0) {
+        await Brightness.setSystemBrightnessAsync(MAX_BRIGHTNESS)
       }
-    })()
+    }
+  }
 
-    AppState.addEventListener('change', onAwake)
+  useEffect(() => {
+    initializeBrightness()
+
+    AppState.addEventListener('change', onAwakeOrSleep)
 
     return () => {
-      AppState.removeEventListener('change', onAwake)
+      AppState.removeEventListener('change', onAwakeOrSleep)
     }
   }, [])
 
@@ -65,9 +91,10 @@ const Proofs = () => {
         containerStyle={styles.header}
         backgroundColor='#16161a'
       >
-        <TouchableHighlight>
+        <></>
+        {/* <TouchableHighlight>
           <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
-        </TouchableHighlight>
+        </TouchableHighlight> */}
         <Text style={styles.title}>My Immunizations</Text>
         <Link to='/scan'>
           <Icon name='add-outline' size={30} type='ionicon' color='#fff' />
