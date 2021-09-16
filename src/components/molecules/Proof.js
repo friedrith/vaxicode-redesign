@@ -56,12 +56,14 @@ const Proof = ({ proof, expanded = false }) => {
 
   const [height] = useState(new Animated.Value(expanded ? 0.5 : 0))
 
-  const [containerWidth, setContainerWidth] = useState(300)
+  const [containerHeight, setContainerHeight] = useState(100)
+
+  const [qrContainerWidth, setQrContainerWidth] = useState(300)
   const [isZoomed, setZoom] = useState(false)
 
   const coeff = isZoomed ? 1 : 0.7
 
-  const qrCodeWidth = Math.max(coeff * containerWidth, 150)
+  const qrCodeWidth = Math.max(coeff * qrContainerWidth, 150)
 
   const [isFullExpanded, setFullExpand] = useState(false)
   const bottomPanel = useRef()
@@ -98,18 +100,18 @@ const Proof = ({ proof, expanded = false }) => {
   }
 
   const interpolateRotating = height.interpolate({
-    inputRange: [0, 0.5],
-    outputRange: ['0deg', '180deg'],
+    inputRange: [0, 0.5, 1],
+    outputRange: ['0deg', '180deg', '180deg'],
   })
 
   const interpolateHeight = height.interpolate({
     inputRange: [0, 0.5, 1],
-    outputRange: [0, 400, 800],
+    outputRange: [0, containerHeight, containerHeight],
   })
 
-  const changeContainerWidth = event => {
+  const changeQRContainerWidth = event => {
     const { width } = event.nativeEvent.layout
-    setContainerWidth(width)
+    setQrContainerWidth(width)
   }
 
   const onPinchGestureEvent = event => {
@@ -120,6 +122,11 @@ const Proof = ({ proof, expanded = false }) => {
     if (event.nativeEvent.state === State.ACTIVE) {
       setZoom(!isZoomed)
     }
+  }
+
+  const changeContainer = event => {
+    const { height } = event.nativeEvent.layout
+    setContainerHeight(height)
   }
 
   return (
@@ -138,8 +145,11 @@ const Proof = ({ proof, expanded = false }) => {
         </View>
       </TouchableOpacity>
       <Animated.View style={[styles.content, { height: interpolateHeight }]}>
-        <View style={styles.innerContent}>
-          <View style={styles.qrCodeContainer} onLayout={changeContainerWidth}>
+        <View style={styles.innerContent} onLayout={changeContainer}>
+          <View
+            style={styles.qrCodeContainer}
+            onLayout={changeQRContainerWidth}
+          >
             <TapGestureHandler
               numberOfTaps={2}
               onHandlerStateChange={onDoubleTapGestureEvent}

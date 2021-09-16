@@ -13,6 +13,19 @@ import Icon from 'components/atoms/Icon'
 import { getProofs } from 'redux/proofs'
 import { primary, fontFamily } from 'styles'
 
+import { tr, addTranslation } from 'locales/i18n'
+
+addTranslation({
+  en: {
+    myImmunizations: 'My Immunizations',
+    addProof: 'Add proof',
+  },
+  fr: {
+    myImmunizations: 'Mes Immunisations',
+    addProof: 'Ajouter une preuve',
+  },
+})
+
 const MAX_BRIGHTNESS = 1
 
 const isAwaking = (appState, nextAppState) =>
@@ -53,7 +66,7 @@ const Proofs = () => {
         <Link to='/about'>
           <Icon name='menu-outline' />
         </Link>
-        <Text style={styles.title}>My Immunizations</Text>
+        <Text style={styles.title}>{tr('myImmunizations')}</Text>
         <Link to='/scan'>
           <Icon name='add-outline' />
         </Link>
@@ -69,7 +82,11 @@ const Proofs = () => {
         ) : (
           <View style={styles.content}>
             <Link to='/scan'>
-              <Button title='Add proof' onPress={() => history.push('/scan')} />
+              <Button
+                title={tr('addProof')}
+                onPress={() => history.push('/scan')}
+                icon={<Icon name='add-outline' />}
+              />
             </Link>
           </View>
         )}
