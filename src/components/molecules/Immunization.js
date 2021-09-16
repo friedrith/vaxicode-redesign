@@ -4,17 +4,32 @@ import PropTypes from 'prop-types'
 
 import { primaryHue1, fontFamily, ternary } from 'styles'
 
+import { tr, addTranslation } from 'locales/i18n'
+
+addTranslation({
+  en: {
+    dose: 'Dose',
+    lot: 'Lot',
+  },
+  fr: {
+    dose: 'Dose',
+    lot: 'Lot',
+  },
+})
+
 const Immunizations = ({ immunization }) => (
   <View style={styles.container}>
     <View style={styles.doseNumber}>
-      <Text style={styles.doseNumberLabel}>Dose</Text>
+      <Text style={styles.doseNumberLabel}>{tr('dose')}</Text>
       <Text style={styles.doseNumberValue}>{immunization.doseNumber}</Text>
     </View>
     <View style={styles.content}>
       <Text style={styles.name}>{immunization.vaccinName}</Text>
       <Text style={styles.title}>{immunization.date}</Text>
       <Text style={styles.place}>{immunization.place}</Text>
-      <Text style={styles.title}>Lot {immunization.lot}</Text>
+      <Text style={styles.title}>
+        {tr('lot')} {immunization.lot}
+      </Text>
     </View>
   </View>
 )

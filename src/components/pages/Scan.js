@@ -20,6 +20,26 @@ import {
   secondary,
 } from 'styles'
 
+import i18n, { tr, addTranslation } from 'locales/i18n'
+
+addTranslation({
+  en: {
+    scan: 'Scan the QR code on your vaccination proof.',
+    qrCodeNotValid: `The QR code is not a valid SHC QR code. But you can still save
+    it as another country vaccine passport.`,
+    detected: 'Vaccination proof detected',
+    save: 'Save',
+    name: 'Name',
+  },
+  fr: {
+    scan: 'Scanner le QR code sur votre preuve vaccinale.',
+    qrCodeNotValid: `Le QR code n'est pas un QR code SHC valide. Mais vous pouvez quand même le sauvegarder comme un passeport vaccinale étranger.`,
+    detected: 'Preuve de vaccination détectée',
+    save: 'Sauvegarder',
+    name: 'Nom',
+  },
+})
+
 const barCodeScannerSettings = {
   barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
 }
@@ -96,9 +116,7 @@ const Scan = () => {
   return (
     <ClosablePage>
       <View style={styles.content}>
-        <Text style={styles.scan}>
-          Scan the QR code on your vaccination proof.
-        </Text>
+        <Text style={styles.scan}>{tr('scan')}</Text>
 
         <View style={styles.cameraContainer} onLayout={changeCameraWidth}>
           <Camera
@@ -124,13 +142,12 @@ const Scan = () => {
             {proof.parsingFailed ? (
               <View>
                 <Text style={styles.bottomPanelFailed}>
-                  The QR code is not a valid SHC QR code. But you can still save
-                  it as another country vaccine passport.
+                  {tr('qrCodeNotValid')}
                 </Text>
                 <TextInput
                   style={styles.input}
                   autofocus
-                  placeholder='Name'
+                  placeholder={tr('name')}
                   editable
                   maxLength={40}
                   placeholderTextColor={primaryHue1}
@@ -139,15 +156,15 @@ const Scan = () => {
               </View>
             ) : (
               <View>
-                <Text style={styles.bottomPanelTitle}>
-                  Vaccination proof detected
-                </Text>
+                <Text style={styles.bottomPanelTitle}>{tr('detected')}</Text>
                 <Text style={styles.bottomPanelName}>{proof.name}</Text>
-                <Text style={styles.bottomPanelBirthday}>{proof.birthDay}</Text>
+                <Text style={styles.bottomPanelBirthday}>
+                  {i18n.toTime('date.formats.short', proof.birthDay)}
+                </Text>
               </View>
             )}
           </View>
-          <Button title='Save' onPress={onSaveProof} />
+          <Button title={tr('save')} onPress={onSaveProof} />
         </RBSheet>
       </View>
     </ClosablePage>

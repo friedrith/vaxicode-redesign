@@ -30,6 +30,26 @@ import {
   fontFamily,
   secondary,
 } from 'styles'
+import i18n, { tr, addTranslation } from 'locales/i18n'
+
+addTranslation({
+  en: {
+    showDetails: 'Show details',
+    deleteProof: 'Delete proof',
+    delete: 'Delete',
+    cancel: 'Cancel',
+    immunizations: 'Immunizations',
+    birthday: 'Birthday: ',
+  },
+  fr: {
+    showDetails: 'Afficher les détails',
+    deleteProof: 'Supprimer la preuve',
+    delete: 'Supprimer',
+    cancel: 'Annuler',
+    immunizations: 'Immunisations',
+    birthday: 'Date de naissance : ',
+  },
+})
 
 const Proof = ({ proof, expanded = false }) => {
   const [isExpanded, expand] = useState(expanded)
@@ -142,12 +162,13 @@ const Proof = ({ proof, expanded = false }) => {
                 {!proof.parsingFailed ? (
                   <View>
                     <Text style={styles.dateBirthday}>
-                      Birthday: {proof.birthDay}
+                      {tr('birthday')}
+                      {i18n.toTime('date.formats.short', proof.birthDay)}
                     </Text>
                     {proof.immunizations.length > 0 ? (
                       <View>
                         <Text style={styles.immunizationsTitle}>
-                          Immunization
+                          {tr('immunizations')}
                         </Text>
                         <FlatList
                           data={proof.immunizations}
@@ -163,7 +184,7 @@ const Proof = ({ proof, expanded = false }) => {
                 <View style={styles.buttonDeleteContainer}>
                   <Button
                     onPress={onAskDeleteConfirmation}
-                    title='Delete proof'
+                    title={tr('deleteProof')}
                     small
                     icon={<Icon name='trash-outline' size={25} />}
                   />
@@ -171,7 +192,7 @@ const Proof = ({ proof, expanded = false }) => {
               </View>
             ) : (
               <View style={styles.showDetailsContainer}>
-                <Button title='Show details' small onPress={openFull} />
+                <Button title={tr('showDetails')} small onPress={openFull} />
               </View>
             )}
           </View>
@@ -183,13 +204,13 @@ const Proof = ({ proof, expanded = false }) => {
         customStyles={{ container: styles.bottomPanel }}
       >
         <Button
-          title='Delete'
+          title={tr('delete')}
           icon={<Icon name='trash-outline' size={25} />}
           onPress={onDelete}
           style={styles.confirmDeleteButton}
         />
         <Button
-          title='Cancel'
+          title={tr('cancel')}
           onPress={() => {
             bottomPanel.current.close()
           }}
