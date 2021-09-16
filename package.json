@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.7",
     "@reduxjs/toolkit": "^1.6.1",
+    "@use-it/event-listener": "^0.1.6",
+    "add": "^2.0.6",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
     "cbor-js": "^0.1.0",
@@ -41,7 +43,8 @@
     "react-router-native": "^5.2.1",
     "react-zlib-js": "^1.0.5",
     "redux": "^4.1.1",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "yarn": "^1.22.11"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

@@ -1,19 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-  TouchableHighlight,
-  FlatList,
-  AppState,
-} from 'react-native'
+import { StyleSheet, Text, View, FlatList, AppState } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { Link, useHistory } from 'react-router-native'
 
 import * as Brightness from 'expo-brightness'
 import { Header } from 'react-native-elements'
+import useEventListener from '@use-it/event-listener'
 
 import Button from '../atoms/Button'
 import Proof from '../molecules/Proof'
@@ -21,12 +14,10 @@ import { getProofs } from '../../redux/proofs'
 
 const MAX_BRIGHTNESS = 1
 
-const Proofs = () => {
-  const permission = useRef('')
-  const isAvailable = useRef(false)
-  const previousBrightness = useRef(0)
-  const previousBrightnessMode = useRef(Brightness.BrightnessMode.AUTOMATIC)
+const isAwaking = (appState, nextAppState) =>
+  appState.match(/inactive|background/) && nextAppState === 'active'
 
+const Proofs = () => {
   const activeIndex = useRef(0)
 
   const appState = useRef(AppState.currentState)
@@ -35,54 +26,25 @@ const Proofs = () => {
 
   const history = useHistory()
 
-  const onAwakeOrSleep = async nextAppState => {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === 'active' &&
-      isAvailable.current &&
-      permission.current === 'granted' &&
-      proofs.length > 0
-    ) {
-      Brightness.setSystemBrightnessAsync(MAX_BRIGHTNESS)
-    } else if (
-      appState.current === 'active' &&
-      nextAppState.match(/inactive|background/) &&
-      isAvailable.current
-    ) {
-      await Brightness.setSystemBrightnessAsync(previousBrightness.current)
-      if (Platform.OS === 'android') {
-        await Brightness.setSystemBrightnessModeAsync(
-          previousBrightnessMode.current
-        )
-      }
+  const initializeBrightness = async () => {
+    if (proofs.length > 0) {
+      await Brightness.setBrightnessAsync(MAX_BRIGHTNESS)
+    }
+  }
+
+  const onAwake = async nextAppState => {
+    if (isAwaking(appState.current, nextAppState)) {
+      await initializeBrightness
     }
 
     appState.current = nextAppState
   }
 
-  const initializeBrightness = async () => {
-    permission.current = (await Brightness.requestPermissionsAsync()).status
-    isAvailable.current = await Brightness.isAvailableAsync()
-    if (isAvailable.current && permission.current === 'granted') {
-      previousBrightness.current = await Brightness.getSystemBrightnessAsync()
-      previousBrightnessMode.current =
-        await Brightness.getSystemBrightnessModeAsync()
-
-      if (proofs.length > 0) {
-        await Brightness.setSystemBrightnessAsync(MAX_BRIGHTNESS)
-      }
-    }
-  }
-
   useEffect(() => {
     initializeBrightness()
-
-    AppState.addEventListener('change', onAwakeOrSleep)
-
-    return () => {
-      AppState.removeEventListener('change', onAwakeOrSleep)
-    }
   }, [])
+
+  useEventListener('change', onAwake, AppState)
 
   return (
     <View style={styles.container}>
@@ -91,10 +53,6 @@ const Proofs = () => {
         containerStyle={styles.header}
         backgroundColor='#16161a'
       >
-        {/* <></> */}
-        {/* <TouchableHighlight>
-          <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
-        </TouchableHighlight> */}
         <Link to='/about'>
           <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
         </Link>
