@@ -12,6 +12,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import Scan from './src/components/pages/Scan'
 import Proofs from './src/components/pages/Proofs'
+import About from './src/components/pages/About'
 
 export default () => {
   const [loaded] = useFonts({
@@ -33,6 +34,7 @@ export default () => {
                 <BackButton>
                   <Route exact path='/' component={Proofs} />
                   <Route exact path='/scan' component={Scan} />
+                  <Route exact path='/about' component={About} />
                 </BackButton>
               </NativeRouter>
             </GestureHandlerRootView>

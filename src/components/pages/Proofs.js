@@ -91,10 +91,13 @@ const Proofs = () => {
         containerStyle={styles.header}
         backgroundColor='#16161a'
       >
-        <></>
+        {/* <></> */}
         {/* <TouchableHighlight>
           <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
         </TouchableHighlight> */}
+        <Link to='/about'>
+          <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
+        </Link>
         <Text style={styles.title}>My Immunizations</Text>
         <Link to='/scan'>
           <Icon name='add-outline' size={30} type='ionicon' color='#fff' />

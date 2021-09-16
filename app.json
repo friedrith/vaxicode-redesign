@@ -15,9 +15,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "io.interactiondynamics.vaxicoderedesign",
+      "buildNumber": "1.0.0"
     },
     "android": {
+      "package": "io.interaction_dynamics.vaxicode_redesign",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

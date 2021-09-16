@@ -1,24 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Vibration,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import { StyleSheet, Text, View, TextInput, Vibration } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-native'
 
 import { Camera } from 'expo-camera'
-import { Icon } from 'react-native-elements'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import RBSheet from 'react-native-raw-bottom-sheet'
-import { Header } from 'react-native-elements'
 
 import parserQrCode from '../../utils/parserQrCode'
 import Button from '../atoms/Button'
 import { addProof } from '../../redux/proofs'
+import ClosablePage from '../molecules/ClosablePage'
 
 const Scan = () => {
   const [hasPermission, setHasPermission] = useState(null)
@@ -89,23 +81,8 @@ const Scan = () => {
     setCameraWidth(width)
   }
 
-  const close = () => {
-    history.goBack()
-  }
-
   return (
-    <View style={styles.container}>
-      <Header
-        placement='center'
-        containerStyle={styles.header}
-        backgroundColor='#16161a'
-      >
-        <></>
-        <></>
-        <TouchableWithoutFeedback onPress={close}>
-          <Icon name='close-outline' size={30} type='ionicon' color='#fff' />
-        </TouchableWithoutFeedback>
-      </Header>
+    <ClosablePage>
       <View style={styles.content}>
         <Text style={styles.scan}>
           Scan the QR code on your vaccination proof.
@@ -163,22 +140,11 @@ const Scan = () => {
           <Button title='Save' onPress={onSaveProof} />
         </RBSheet>
       </View>
-    </View>
+    </ClosablePage>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#16161a',
-  },
-  header: {
-    borderBottomColor: 'transparent',
-    backgroundColor: '#16161a',
-    display: 'flex',
-    alignItems: 'center',
-  },
-
   content: {
     flex: 1,
     padding: 20,
