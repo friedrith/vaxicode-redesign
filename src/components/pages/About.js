@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import ClosablePage from '../molecules/ClosablePage'
+import ClosablePage from 'components/templates/ClosablePage'
+import { primaryHue1, fontFamily } from 'styles'
 
 const About = () => {
   return (
@@ -22,9 +23,9 @@ const styles = StyleSheet.create({
   },
   general: {
     fontSize: 23,
-    color: '#94A1B2',
+    color: primaryHue1,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
 })
 

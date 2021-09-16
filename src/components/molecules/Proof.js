@@ -10,7 +10,6 @@ import {
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { Icon } from 'react-native-elements'
 import QRCode from 'react-native-qrcode-svg'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import {
@@ -19,9 +18,18 @@ import {
   State,
 } from 'react-native-gesture-handler'
 
-import Button from '../atoms/Button'
-import Immunization from '../molecules/Immunization'
-import { removeProof } from '../../redux/proofs'
+import Button from 'components/atoms/Button'
+import Immunization from 'components/molecules/Immunization'
+import { removeProof } from 'redux/proofs'
+import Icon from 'components/atoms/Icon'
+import {
+  backgroundColor,
+  backgroundColorHue1,
+  primary,
+  primaryHue1,
+  fontFamily,
+  secondary,
+} from 'styles'
 
 const Proof = ({ proof, expanded = false }) => {
   const [isExpanded, expand] = useState(expanded)
@@ -105,12 +113,7 @@ const Proof = ({ proof, expanded = false }) => {
               { transform: [{ rotate: interpolateRotating }] },
             ]}
           >
-            <Icon
-              name='chevron-down-outline'
-              size={30}
-              type='ionicon'
-              color='#fff'
-            />
+            <Icon name='chevron-down-outline' />
           </Animated.View>
         </View>
       </TouchableOpacity>
@@ -162,14 +165,7 @@ const Proof = ({ proof, expanded = false }) => {
                     onPress={onAskDeleteConfirmation}
                     title='Delete proof'
                     small
-                    icon={
-                      <Icon
-                        name='trash-outline'
-                        size={25}
-                        type='ionicon'
-                        color='#fffffe'
-                      />
-                    }
+                    icon={<Icon name='trash-outline' size={25} />}
                   />
                 </View>
               </View>
@@ -188,14 +184,7 @@ const Proof = ({ proof, expanded = false }) => {
       >
         <Button
           title='Delete'
-          icon={
-            <Icon
-              name='trash-outline'
-              size={25}
-              type='ionicon'
-              color='#fffffe'
-            />
-          }
+          icon={<Icon name='trash-outline' size={25} />}
           onPress={onDelete}
           style={styles.confirmDeleteButton}
         />
@@ -204,14 +193,7 @@ const Proof = ({ proof, expanded = false }) => {
           onPress={() => {
             bottomPanel.current.close()
           }}
-          icon={
-            <Icon
-              name='close-circle-outline'
-              size={25}
-              type='ionicon'
-              color='#fffffe'
-            />
-          }
+          icon={<Icon name='close-circle-outline' size={25} />}
           basic
         />
       </RBSheet>
@@ -223,7 +205,7 @@ const padding = 15
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#242629',
+    backgroundColor: backgroundColorHue1,
     borderRadius: 7,
     marginLeft: 15,
     marginRight: 15,
@@ -240,16 +222,16 @@ const styles = StyleSheet.create({
   animation: {},
   title: {
     fontSize: 25,
-    color: '#fffffe',
+    color: primary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     flex: 1,
   },
   dateBirthday: {
     fontSize: 20,
-    color: '#72757e',
+    color: primaryHue1,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
   icon: {
     transform: [{ rotate: '0deg' }],
@@ -281,7 +263,7 @@ const styles = StyleSheet.create({
   },
   bottomPanel: {
     padding: 20,
-    backgroundColor: '#16161a',
+    backgroundColor,
     display: 'flex',
     flexDirection: 'column',
   },
@@ -296,29 +278,29 @@ const styles = StyleSheet.create({
   },
   immunizationsTitle: {
     fontSize: 20,
-    color: '#fffffe',
+    color: primary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     paddingTop: 20,
     paddingBottom: 10,
   },
   protection: {
-    backgroundColor: '#2cb67d',
+    backgroundColor: secondary,
     borderRadius: 10,
     padding: 20,
   },
   protectionTitle: {
     fontSize: 16,
-    color: '#fffffe',
+    color: primary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     fontWeight: 'bold',
   },
   protectionDescription: {
     fontSize: 16,
-    color: '#fffffe',
+    color: primary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
 })
 

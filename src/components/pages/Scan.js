@@ -7,10 +7,22 @@ import { Camera } from 'expo-camera'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import RBSheet from 'react-native-raw-bottom-sheet'
 
-import parserQrCode from '../../utils/parserQrCode'
-import Button from '../atoms/Button'
-import { addProof } from '../../redux/proofs'
-import ClosablePage from '../molecules/ClosablePage'
+import parserQrCode from 'utils/parserQrCode'
+import Button from 'components/atoms/Button'
+import { addProof } from 'redux/proofs'
+import ClosablePage from 'components/templates/ClosablePage'
+import {
+  backgroundColor,
+  backgroundColorHue1,
+  primary,
+  primaryHue1,
+  fontFamily,
+  secondary,
+} from 'styles'
+
+const barCodeScannerSettings = {
+  barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+}
 
 const Scan = () => {
   const [hasPermission, setHasPermission] = useState(null)
@@ -45,7 +57,7 @@ const Scan = () => {
     return <Text>No access to camera</Text>
   }
 
-  const scanned = ({ data }) => {
+  const onScan = ({ data }) => {
     if (data === barCodeScanned.current) {
       return ''
     }
@@ -97,11 +109,9 @@ const Scan = () => {
               height: cameraWidth,
             }}
             type={Camera.Constants.Type.back}
-            barCodeScannerSettings={{
-              barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-            }}
-            onBarCodeScanned={scanned}
-          ></Camera>
+            barCodeScannerSettings={barCodeScannerSettings}
+            onBarCodeScanned={onScan}
+          />
         </View>
         <RBSheet
           ref={bottomPanel}
@@ -123,7 +133,7 @@ const Scan = () => {
                   placeholder='Name'
                   editable
                   maxLength={40}
-                  placeholderTextColor='#94a1b2'
+                  placeholderTextColor={primaryHue1}
                   onChangeText={onChangeText}
                 />
               </View>
@@ -152,17 +162,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    backgroundColor: '#242629',
-    color: '#fffffe',
+    backgroundColor: backgroundColorHue1,
+    color: primary,
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
   },
   scan: {
     fontSize: 23,
-    color: '#94A1B2',
+    color: primaryHue1,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     paddingBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
@@ -181,7 +191,7 @@ const styles = StyleSheet.create({
   },
   bottomPanel: {
     padding: 20,
-    backgroundColor: '#16161a',
+    backgroundColor,
     display: 'flex',
     flexDirection: 'column',
   },
@@ -190,28 +200,28 @@ const styles = StyleSheet.create({
   },
   bottomPanelTitle: {
     fontSize: 18,
-    color: '#2cb67d',
+    color: secondary,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
   bottomPanelFailed: {
     fontSize: 18,
-    color: '#fffffe',
+    color: primary,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
   bottomPanelName: {
     fontSize: 35,
-    color: '#fffffe',
+    color: primary,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     paddingTop: 20,
   },
   bottomPanelBirthday: {
     fontSize: 20,
-    color: '#94a1b2',
+    color: primaryHue1,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     paddingTop: 10,
   },
 })

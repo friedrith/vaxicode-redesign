@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 
+import { primaryHue1, fontFamily, ternary } from 'styles'
+
 const Immunizations = ({ immunization }) => (
   <View style={styles.container}>
     <View style={styles.doseNumber}>
@@ -21,7 +23,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 5,
     borderRadius: 10,
-    backgroundColor: '#94a1b2',
+    backgroundColor: primaryHue1,
     display: 'flex',
     flexDirection: 'row',
     marginBottom: 10,
@@ -36,35 +38,35 @@ const styles = StyleSheet.create({
   },
   doseNumberLabel: {
     fontSize: 15,
-    color: '#010101',
+    color: ternary,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
   doseNumberValue: {
     fontSize: 25,
-    color: '#010101',
+    color: ternary,
     textAlign: 'center',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
   title: {
     fontSize: 16,
-    color: '#010101',
+    color: ternary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
   },
   place: {
     fontSize: 16,
-    color: '#010101',
+    color: ternary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     paddingTop: 10,
     paddingBottom: 10,
   },
   name: {
     fontSize: 15,
-    color: '#010101',
+    color: ternary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     fontWeight: 'bold',
   },
   content: {

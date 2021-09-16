@@ -1,16 +1,17 @@
 import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { StyleSheet, Text, View, FlatList, AppState } from 'react-native'
-import { Icon } from 'react-native-elements'
 import { Link, useHistory } from 'react-router-native'
-
 import * as Brightness from 'expo-brightness'
-import { Header } from 'react-native-elements'
 import useEventListener from '@use-it/event-listener'
 
-import Button from '../atoms/Button'
-import Proof from '../molecules/Proof'
-import { getProofs } from '../../redux/proofs'
+import Button from 'components/atoms/Button'
+import Proof from 'components/molecules/Proof'
+import Page from 'components/templates/Page'
+import Header from 'components/molecules/Header'
+import Icon from 'components/atoms/Icon'
+import { getProofs } from 'redux/proofs'
+import { primary, fontFamily } from 'styles'
 
 const MAX_BRIGHTNESS = 1
 
@@ -47,18 +48,14 @@ const Proofs = () => {
   useEventListener('change', onAwake, AppState)
 
   return (
-    <View style={styles.container}>
-      <Header
-        placement='center'
-        containerStyle={styles.header}
-        backgroundColor='#16161a'
-      >
+    <Page>
+      <Header>
         <Link to='/about'>
-          <Icon name='menu-outline' size={30} type='ionicon' color='#fff' />
+          <Icon name='menu-outline' />
         </Link>
         <Text style={styles.title}>My Immunizations</Text>
         <Link to='/scan'>
-          <Icon name='add-outline' size={30} type='ionicon' color='#fff' />
+          <Icon name='add-outline' />
         </Link>
       </Header>
       <View style={styles.list}>
@@ -77,24 +74,14 @@ const Proofs = () => {
           </View>
         )}
       </View>
-    </View>
+    </Page>
   )
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#16161a',
-  },
-  header: {
-    borderBottomColor: 'transparent',
-    backgroundColor: '#16161a',
-    display: 'flex',
-    alignItems: 'center',
-  },
   title: {
-    color: '#fffffe',
+    color: primary,
     textAlign: 'left',
-    fontFamily: 'Jost-Medium',
+    fontFamily,
     fontSize: 17,
     textTransform: 'uppercase',
     flex: 1,
