@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, View, Text, Platform } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 
 import * as Expo from 'expo-camera'
 import { BarCodeScanner } from 'expo-barcode-scanner'
@@ -88,6 +88,10 @@ const Camera = ({ onScan }, ref) => {
       <Text style={{ color: 'white' }}>{Expo.Camera.pictureSize}</Text>
     </View>
   )
+}
+
+Camera.propTypes = {
+  onScan: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({
