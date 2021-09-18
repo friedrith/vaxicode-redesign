@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { StyleSheet, Text, View, TextInput, Vibration } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-native'
 
-import { Camera } from 'expo-camera'
-import { BarCodeScanner } from 'expo-barcode-scanner'
 import RBSheet from 'react-native-raw-bottom-sheet'
 
 import parserQrCode from 'utils/parserQrCode'
 import Button from 'components/atoms/Button'
 import { addProof } from 'redux/proofs'
 import ClosablePage from 'components/templates/ClosablePage'
+import Camera from 'components/molecules/Camera'
 import {
   backgroundColor,
   backgroundColorHue1,
@@ -40,16 +39,11 @@ addTranslation({
   },
 })
 
-const barCodeScannerSettings = {
-  barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-}
-
 const Scan = () => {
-  const [hasPermission, setHasPermission] = useState(null)
   const barCodeScanned = useRef('')
   const camera = useRef()
 
-  const [cameraWidth, setCameraWidth] = useState(300)
+  // const [cameraWidth, setCameraWidth] = useState(300)
 
   const bottomPanel = useRef()
 
@@ -58,24 +52,6 @@ const Scan = () => {
   const dispatch = useDispatch()
 
   const history = useHistory()
-
-  useEffect(() => {
-    ;(async () => {
-      const { status } = await Camera.requestPermissionsAsync()
-      setHasPermission(status === 'granted')
-
-      if (status !== 'granted') {
-        history.goBack()
-      }
-    })()
-  }, [])
-
-  if (hasPermission === null) {
-    return <View />
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>
-  }
 
   const onScan = ({ data }) => {
     if (data === barCodeScanned.current) {
@@ -108,29 +84,11 @@ const Scan = () => {
     })
   }
 
-  const changeCameraWidth = event => {
-    const { width } = event.nativeEvent.layout
-    setCameraWidth(width)
-  }
-
   return (
     <ClosablePage>
       <View style={styles.content}>
         <Text style={styles.scan}>{tr('scan')}</Text>
-
-        <View style={styles.cameraContainer} onLayout={changeCameraWidth}>
-          <Camera
-            ref={camera}
-            style={{
-              ...styles.camera,
-              width: cameraWidth,
-              height: cameraWidth,
-            }}
-            type={Camera.Constants.Type.back}
-            barCodeScannerSettings={barCodeScannerSettings}
-            onBarCodeScanned={onScan}
-          />
-        </View>
+        <Camera ref={camera} onScan={onScan} />
         <RBSheet
           ref={bottomPanel}
           height={300}
@@ -197,15 +155,7 @@ const styles = StyleSheet.create({
   scanIcon: {
     opacity: 0.3,
   },
-  cameraContainer: {
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  camera: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   bottomPanel: {
     padding: 20,
     backgroundColor,
