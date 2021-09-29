@@ -155,13 +155,8 @@ const Proof = ({ proof, expanded = false }) => {
               onHandlerStateChange={onDoubleTapGestureEvent}
             >
               <PinchGestureHandler onHandlerStateChange={onPinchGestureEvent}>
-                <View>
-                  <QRCode
-                    value={proof.raw}
-                    size={qrCodeWidth}
-                    logoSize={qrCodeWidth}
-                    logoMargin={0}
-                  />
+                <View style={styles.qrContainerPadding}>
+                  <QRCode value={proof.raw} size={qrCodeWidth - 20} />
                 </View>
               </PinchGestureHandler>
             </TapGestureHandler>
@@ -244,6 +239,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
+  },
+  qrContainerPadding: {
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
   },
   header: {
     display: 'flex',

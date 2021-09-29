@@ -11,7 +11,7 @@ const barCodeScannerSettings = {
   barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
 }
 
-const Camera = ({ onScan }, ref) => {
+const Camera = ({ onScan, ref }) => {
   const [cameraWidth, setCameraWidth] = useState(300)
   const [hasPermission, setPermission] = useState(false)
 
@@ -92,6 +92,7 @@ const Camera = ({ onScan }, ref) => {
 
 Camera.propTypes = {
   onScan: PropTypes.func.isRequired,
+  ref: PropTypes.object,
 }
 
 const styles = StyleSheet.create({
@@ -109,4 +110,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default React.forwardRef(Camera)
+export default React.forwardRef((props, ref) => <Camera ref={ref} {...props} />)

@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react'
 import { StyleSheet, Text, View, TextInput, Vibration } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-native'
 
 import RBSheet from 'react-native-raw-bottom-sheet'
 
 import parserQrCode from 'utils/parserQrCode'
 import Button from 'components/atoms/Button'
-import { addProof } from 'redux/proofs'
+import { addProof, getProofs } from 'redux/proofs'
 import ClosablePage from 'components/templates/ClosablePage'
 import Camera from 'components/molecules/Camera'
 import {
@@ -53,16 +53,25 @@ const Scan = () => {
 
   const history = useHistory()
 
+  const importedProofs = useSelector(getProofs)
+
   const onScan = ({ data }) => {
     if (data === barCodeScanned.current) {
-      return ''
+      return
     }
+    barCodeScanned.current = data
+    camera.current.pausePreview()
 
     Vibration.vibrate()
 
-    camera.current.pausePreview()
-    barCodeScanned.current = data
-    setProof(parserQrCode(data))
+    const importedProof = importedProofs.find(p => p.raw === data)
+
+    if (importedProof) {
+      setProof({ ...importedProof, imported: true })
+    } else {
+      setProof(parserQrCode(data))
+    }
+
     bottomPanel.current.open()
   }
 
