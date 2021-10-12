@@ -17,6 +17,7 @@ import {
   primaryHue1,
   fontFamily,
   secondary,
+  warning,
 } from 'styles'
 
 import i18n, { tr, addTranslation } from 'locales/i18n'
@@ -29,6 +30,9 @@ addTranslation({
     detected: 'Vaccination proof detected',
     save: 'Save',
     name: 'Name',
+    alreadyImported:
+      "This proof is already imported. You can't import it again.",
+    scanOther: 'Scan another proof',
   },
   fr: {
     scan: 'Scanner le QR code sur votre preuve vaccinale.',
@@ -36,6 +40,9 @@ addTranslation({
     detected: 'Preuve de vaccination détectée',
     save: 'Sauvegarder',
     name: 'Nom',
+    alreadyImported:
+      "Cette preuve est déjà importée. Vous ne pouvez pas l'importer à nouveau.",
+    scanOther: 'Scanner une autre preuve',
   },
 })
 
@@ -67,7 +74,7 @@ const Scan = () => {
     const importedProof = importedProofs.find(p => p.raw === data)
 
     if (importedProof) {
-      setProof({ ...importedProof, imported: true })
+      setProof({ ...importedProof, alreadyImported: true })
     } else {
       setProof(parserQrCode(data))
     }
@@ -91,6 +98,10 @@ const Scan = () => {
       ...proof,
       payload: { name: text },
     })
+  }
+
+  const closeBottomPanel = () => {
+    bottomPanel.current.close()
   }
 
   return (
@@ -131,7 +142,21 @@ const Scan = () => {
               </View>
             )}
           </View>
-          <Button title={tr('save')} onPress={onSaveProof} />
+          {proof.alreadyImported ? (
+            <View>
+              <Text style={styles.alreadyImported}>
+                {tr('alreadyImported')}
+              </Text>
+              <Button
+                title={tr('scanOther')}
+                basic
+                onPress={closeBottomPanel}
+                small
+              />
+            </View>
+          ) : (
+            <Button title={tr('save')} onPress={onSaveProof} />
+          )}
         </RBSheet>
       </View>
     </ClosablePage>
@@ -199,6 +224,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily,
     paddingTop: 10,
+  },
+  alreadyImported: {
+    fontSize: 15,
+    color: warning,
+    textAlign: 'center',
+    fontFamily,
+    paddingBottom: 10,
   },
 })
 

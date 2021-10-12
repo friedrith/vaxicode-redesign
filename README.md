@@ -25,6 +25,7 @@ Our Qr code parsers are inspired from:
 - [React native component library](https://reactnativeelements.com/docs/icon/)
 - [Localization](https://docs.expo.dev/versions/v42.0.0/sdk/localization/)
 - [other library for localization](https://necolas.github.io/react-native-web/docs/localization/)
+- https://www.happyhues.co/palettes/4
 
 ## License 
 

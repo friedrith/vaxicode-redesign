@@ -8,6 +8,8 @@ export const secondary = '#2cb67d' // success
 
 export const ternary = '#010101'
 
+export const warning = '#ef4565'
+
 export const fontFamily = 'Jost-Medium'
 
 export const iconSize = 30

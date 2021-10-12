@@ -11,7 +11,8 @@ const barCodeScannerSettings = {
   barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
 }
 
-const Camera = ({ onScan, ref }) => {
+// eslint-disable-next-line react/prop-types
+const Camera = React.forwardRef(({ onScan }, ref) => {
   const [cameraWidth, setCameraWidth] = useState(300)
   const [hasPermission, setPermission] = useState(false)
 
@@ -88,12 +89,12 @@ const Camera = ({ onScan, ref }) => {
       <Text style={{ color: 'white' }}>{Expo.Camera.pictureSize}</Text>
     </View>
   )
-}
+})
 
-Camera.propTypes = {
-  onScan: PropTypes.func.isRequired,
-  ref: PropTypes.object,
-}
+// Camera.propTypes = {
+//   onScan: PropTypes.func.isRequired,
+//   ref: PropTypes.object,
+// }
 
 const styles = StyleSheet.create({
   cameraContainer: {
@@ -110,4 +111,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default React.forwardRef((props, ref) => <Camera ref={ref} {...props} />)
+export default Camera
