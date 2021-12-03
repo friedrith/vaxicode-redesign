@@ -1,6 +1,21 @@
-# Vaxicode-redesign
+<div align="center">
+<h1 style="border: 0">Vaxicode Redesign</h1>
+<img src="https://user-images.githubusercontent.com/4005226/144686496-fed286b7-3bc3-4aa9-ad81-840224b5a359.png" alt="sreenshot" />
+<br>
+
+</div>
 
 This project is a redesign of the Vaxicode application, the Québec application to manage vaccinal passports.
+
+It includes a lot of new features like:
+
+- automatic brightness increase to make the QR codes easier to scan
+- import vaccination passports from other countries
+- better user experience
+
+This project has been implemented with React Native and more specifically Expo. It also includes a system of Localization.
+
+## Getting started
 
 ```bash
 yarn
@@ -27,6 +42,6 @@ Our Qr code parsers are inspired from:
 - [other library for localization](https://necolas.github.io/react-native-web/docs/localization/)
 - https://www.happyhues.co/palettes/4
 
-## License 
+## License
 
 React is [MIT licensed](./LICENSE).
