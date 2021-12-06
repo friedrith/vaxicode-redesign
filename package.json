@@ -8,7 +8,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest",
-    "build": "expo build:android -t apk"
+    "build": "expo build:android -t apk",
+    "release": "npx standard-version"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.7",
