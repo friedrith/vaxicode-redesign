@@ -30,7 +30,7 @@ yarn start
 Our Qr code parsers are inspired from:
 
 - french: https://github.com/manekinekko/digital-covid-certificate-decoder/blob/main/index.js
-- canadian: https://github.com/obrassard/shc-extractorx
+- quebec: https://github.com/obrassard/shc-extractorx
 
 ### React native
 

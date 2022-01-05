@@ -41,6 +41,8 @@ const parsePayload = payload => {
 
   const name = `${given} ${family}`
 
+  console.log('payload', payload)
+
   const birthDay =
     payload.vc.credentialSubject.fhirBundle.entry[0].resource.birthDate
 
@@ -50,9 +52,9 @@ const parsePayload = payload => {
       name: entry.resource.resourceType,
       code: entry.resource.vaccineCode.coding[0].code,
       lot: entry.resource.lotNumber,
-      doseNumber: entry.resource.protocolApplied.doseNumber,
+      doseNumber: index + 1,
       date: entry.resource.occurrenceDateTime.split('T')[0],
-      place: entry.resource.location.display.replace('"', ''),
+      place: entry.resource.performer[0].actor.display.replace('"', ''),
       id: entry.resource.occurrenceDateTime.split('T')[0],
       vaccinName:
         names[entry.resource.vaccineCode.coding[0].code] ||
@@ -83,10 +85,11 @@ export default rawSHC => {
         payload,
         jwt,
       },
-      from: 'QC',
+      from: 'CA',
       ...parsePayload(payload),
     }
   } catch (e) {
+    console.log('error', e)
     return null
   }
 }

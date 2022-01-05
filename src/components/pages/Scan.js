@@ -25,7 +25,7 @@ import i18n, { tr, addTranslation } from 'locales/i18n'
 addTranslation({
   en: {
     scan: 'Scan the QR code on your vaccination proof.',
-    qrCodeNotValid: `The QR code is not a valid SHC QR code. But you can still save
+    qrCodeNotValid: `The QR code is not a valid vaccination proof from a registered country. But you can still save
     it as another country vaccine passport.`,
     detected: 'Vaccination proof detected',
     save: 'Save',
@@ -36,7 +36,7 @@ addTranslation({
   },
   fr: {
     scan: 'Scanner le QR code sur votre preuve vaccinale.',
-    qrCodeNotValid: `Le QR code n'est pas un QR code SHC valide. Mais vous pouvez quand même le sauvegarder comme un passeport vaccinale étranger.`,
+    qrCodeNotValid: `Le QR code n'est pas une preuve vaccinale valide d'un pays référencé. Mais vous pouvez quand même le sauvegarder comme un passeport vaccinale étranger.`,
     detected: 'Preuve de vaccination détectée',
     save: 'Sauvegarder',
     name: 'Nom',
@@ -134,7 +134,9 @@ const Scan = () => {
               </View>
             ) : (
               <View>
-                <Text style={styles.bottomPanelTitle}>{tr('detected')}</Text>
+                <Text style={styles.bottomPanelTitle}>
+                  {tr('detected')} [{proof.from}]
+                </Text>
                 <Text style={styles.bottomPanelName}>{proof.name}</Text>
                 <Text style={styles.bottomPanelBirthday}>
                   {i18n.toTime('date.formats.short', proof.birthDay)}
@@ -219,6 +221,13 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   bottomPanelBirthday: {
+    fontSize: 20,
+    color: primaryHue1,
+    textAlign: 'center',
+    fontFamily,
+    paddingTop: 10,
+  },
+  bottomPanelFrom: {
     fontSize: 20,
     color: primaryHue1,
     textAlign: 'center',

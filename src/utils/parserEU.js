@@ -58,5 +58,6 @@ export default raw => {
     name: `${gn} ${fn}`,
     birthDay,
     immunizations: [],
+    from: 'EU',
   }
 }

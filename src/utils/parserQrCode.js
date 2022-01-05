@@ -2,8 +2,9 @@ import uuid from 'react-native-uuid'
 
 import parseShc from './parseShc'
 import parserEU from './parserEU'
+import parserCa from './parseShcCanada'
 
-const parsers = [parseShc, parserEU]
+const parsers = [parseShc, parserEU, parserCa]
 
 export default raw => {
   // return parseShc(raw)

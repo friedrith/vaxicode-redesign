@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react'
+
 import {
   StyleSheet,
   Text,
@@ -133,7 +134,9 @@ const Proof = ({ proof, expanded = false }) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={toggle}>
         <View style={styles.header}>
-          <Text style={styles.title}>{proof.name}</Text>
+          <Text style={styles.title}>
+            {proof.name} [{proof.from}]
+          </Text>
           <Animated.View
             style={[
               styles.animation,
@@ -240,6 +243,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
   },
+  flag: {
+    marginLeft: 10,
+    marginRight: 10,
+  },
   qrContainerPadding: {
     padding: 10,
     backgroundColor: 'white',
@@ -248,6 +255,7 @@ const styles = StyleSheet.create({
   header: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     padding: padding,
   },
   animation: {},
@@ -342,6 +350,7 @@ Proof.propTypes = {
     name: PropTypes.string.isRequired,
     parsingFailed: PropTypes.bool,
     immunizations: PropTypes.arrayOf(PropTypes.shape({})),
+    from: PropTypes.string,
     raw: PropTypes.string.isRequired,
   }).isRequired,
   expanded: PropTypes.bool.isRequired,
