@@ -41,8 +41,6 @@ const parsePayload = payload => {
 
   const name = `${given} ${family}`
 
-  console.log('payload', payload)
-
   const birthDay =
     payload.vc.credentialSubject.fhirBundle.entry[0].resource.birthDate
 

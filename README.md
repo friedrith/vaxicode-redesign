@@ -10,7 +10,7 @@ This project is a redesign of the Vaxicode application, the Québec application 
 It includes a lot of new features like:
 
 - automatic brightness increase to make the QR codes easier to scan
-- import vaccination passports from other countries
+- import vaccination passports from other countries (Quebec, Canada, EU, etc)
 - better user experience
 
 This project has been implemented with React Native and more specifically Expo. It also includes a system of Localization.
